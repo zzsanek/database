@@ -1,0 +1,368 @@
+namespace taxi
+{
+    class DB
+    {
+        MySqlConnection connection = new MySqlConnection("server=localhost;port=3306;username=root;password=1234;database=taxi");
+
+        public void openConnection()
+        {
+            if (connection.State == System.Data.ConnectionState.Closed);
+            connection.Open();
+        
+         }
+
+        public void closeConnection()
+        {
+            if (connection.State == System.Data.ConnectionState.Open) ;
+            connection.Close();
+        }
+
+        public MySqlConnection getConnection()
+        {
+            return connection;
+        }
+    }
+}
+    
+
+
+
+
+
+namespace taxi
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        Point LastPoint;
+
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.Left += e.X - LastPoint.X;
+                this.Top += e.Y - LastPoint.Y;
+            }
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            LastPoint = new Point(e.X, e.Y);
+        }
+
+        private void Exit_MouseEnter(object sender, EventArgs e)
+        {
+            Exit.ForeColor = Color.Black;
+        }
+
+        private void Exit_MouseLeave(object sender, EventArgs e)
+        {
+            Exit.ForeColor = Color.Transparent;
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+        private void LS_Click(object sender, EventArgs e)
+        {
+            DB db = new DB();
+            DataTable table = new DataTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            MySqlCommand command = new MySqlCommand("SELECT * FROM taxi.crew JOIN taxi.car ON taxi.car.id = taxi.crew.car_id join taxi.driver on taxi.crew.driver_id = taxi.driver.driver_id join taxi.color on taxi.car.color_id = taxi.color.id join taxi.model on taxi.model.id = taxi.car.model_id WHERE 1 ORDER BY RAND() LIMIT 1", db.getConnection());
+            //command.Parameters.Add("taxi.driver.f_name", MySqlDbType.VarChar).Value = TextBox1.Text;
+            adapter.SelectCommand = command;
+            adapter.Fill(table);
+            db.openConnection();
+            textBox5.Text = table.Rows[0].ItemArray[10].ToString();
+            textBox6.Text = table.Rows[0].ItemArray[9].ToString(); 
+            textBox3.Text = table.Rows[0].ItemArray[17].ToString();
+            textBox4.Text = table.Rows[0].ItemArray[7].ToString();
+            TextBox1.Text = table.Rows[0].ItemArray[20].ToString();
+            textBox2.Text = table.Rows[0].ItemArray[19].ToString();
+            db.closeConnection();
+        }
+
+        private void SF_Click(object sender, EventArgs e)
+        {
+            DB db = new DB();
+            DataTable table = new DataTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            MySqlCommand command = new MySqlCommand("SELECT * FROM taxi.crew JOIN taxi.car ON taxi.car.id = taxi.crew.car_id join taxi.driver on taxi.crew.driver_id = taxi.driver.driver_id join taxi.color on taxi.car.color_id = taxi.color.id join taxi.model on taxi.model.id = taxi.car.model_id WHERE 1 ORDER BY RAND() LIMIT 1", db.getConnection());
+            adapter.SelectCommand = command;
+            adapter.Fill(table);
+            db.openConnection();
+            textBox5.Text = table.Rows[0].ItemArray[10].ToString();
+            textBox6.Text = table.Rows[0].ItemArray[9].ToString();
+            textBox3.Text = table.Rows[0].ItemArray[17].ToString();
+            textBox4.Text = table.Rows[0].ItemArray[7].ToString();
+            TextBox1.Text = table.Rows[0].ItemArray[20].ToString();
+            textBox2.Text = table.Rows[0].ItemArray[19].ToString();
+            db.closeConnection();
+        }
+    }
+}
+
+
+
+
+
+namespace taxi
+{
+    public partial class RegisterForm : Form
+    {
+        public RegisterForm()
+        {
+            InitializeComponent();
+
+            userNameField.Text = "Введите имя";
+            userSurnameField.Text = "Введите фамилию";
+        }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        Point LastPoint;
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.Left += e.X - LastPoint.X;
+                this.Top += e.Y - LastPoint.Y;
+            }
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            LastPoint = new Point(e.X, e.Y);
+        }
+
+        private void Exit_MouseEnter(object sender, EventArgs e)
+        {
+            Exit.ForeColor = Color.Black;
+        }
+
+        private void Exit_MouseLeave(object sender, EventArgs e)
+        {
+             Exit.ForeColor = Color.Transparent;
+        }
+
+        private void userNameField_Enter(object sender, EventArgs e)
+        {
+            if (userNameField.Text == "Введите имя")
+            {
+                userNameField.Text = " ";
+            }
+        }
+
+        private void userNameField_Leave(object sender, EventArgs e)
+        {
+            if (userNameField.Text == " ")
+            {
+                userNameField.Text = "Введите имя";
+                
+            }
+        }
+
+        private void userSurnameField_Enter(object sender, EventArgs e)
+        {//userSurnameField.Text = "Введите фамилию"
+            if (userSurnameField.Text == "Введите фамилию")
+            {
+                userSurnameField.Text = " ";
+            }
+        }
+
+        private void userSurnameField_Leave(object sender, EventArgs e)
+        {
+            if (userSurnameField.Text == " ")
+            {
+                userSurnameField.Text = "Введите фамилию";
+
+            }
+        }
+
+        private void buttonLogin_Click(object sender, EventArgs e)
+        {
+
+            if (userNameField.Text == "Введите имя")
+            {
+                MessageBox.Show("Введите имя");
+                return;
+            }
+            if (userSurnameField.Text == "Введите фамилию")
+            {
+                MessageBox.Show("Введите фамилию");
+                return;
+            }
+            if (loginField.Text == " ")
+            {
+                MessageBox.Show("Введите телефон");
+                return;
+            }
+            if (passField.Text == " ")
+            {
+                MessageBox.Show("Введите пароль");
+                return;
+            }
+            if (checkUser())
+                return;
+
+            DB db = new DB();
+            MySqlCommand command = new MySqlCommand("INSERT INTO taxi.client (f_name, l_name, telephone, password) VALUES (@name, @surname, @login, @pass)", db.getConnection());
+            command.Parameters.Add("@login", MySqlDbType.VarChar).Value = loginField.Text;
+            command.Parameters.Add("@name", MySqlDbType.VarChar).Value = userNameField.Text;
+            command.Parameters.Add("@surname", MySqlDbType.VarChar).Value = userSurnameField.Text;
+            command.Parameters.Add("@pass", MySqlDbType.VarChar).Value = passField.Text;
+
+            db.openConnection();
+
+            if(command.ExecuteNonQuery() == 1)
+            {
+                MessageBox.Show("Аккаунт был создан");
+            }
+            else
+            {
+                MessageBox.Show("Аккаунт не был создан");
+            }
+
+
+            db.closeConnection();
+
+        }
+
+
+        public Boolean checkUser()
+        {
+            DB db = new DB();
+
+            DataTable table = new DataTable();
+
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+            MySqlCommand command = new MySqlCommand("SELECT * FROM taxi.client WHERE telephone = @uL", db.getConnection());
+            command.Parameters.Add("@uL", MySqlDbType.VarChar).Value = loginField.Text;
+
+            adapter.SelectCommand = command;
+            adapter.Fill(table);
+
+            if (table.Rows.Count > 0)
+            {
+                MessageBox.Show("Данный телефон зарегестрирован");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void AuthorizationButton_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            loginFotn loginFotn = new loginFotn();
+            loginFotn.Show();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+namespace taxi
+{
+
+    public partial class loginFotn : Form
+    {
+        public loginFotn()
+        {
+            InitializeComponent();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void label2_MouseEnter(object sender, EventArgs e)
+        {
+            label2.ForeColor = Color.Black;
+        }
+
+        private void label2_MouseLeave(object sender, EventArgs e)
+        {
+            label2.ForeColor = Color.Transparent;
+        }
+
+        Point LastPoint;
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left)
+            {
+                this.Left += e.X - LastPoint.X;
+                this.Top += e.Y - LastPoint.Y;
+            }
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            LastPoint = new Point(e.X, e.Y);
+        }
+
+        private void buttonLogin_Click(object sender, EventArgs e)
+        {
+            string loginUser = loginField.Text;
+            string passUser = passField.Text;
+
+            DB db = new DB();
+
+            DataTable table = new DataTable();
+
+            MySqlDataAdapter adapter = new MySqlDataAdapter(); //  74149570266 `taxi`.`client`
+
+            MySqlCommand command = new MySqlCommand("SELECT * FROM taxi.client WHERE telephone = @uL AND password = @uP", db.getConnection());
+            command.Parameters.Add("@uL", MySqlDbType.VarChar).Value = loginUser;
+            command.Parameters.Add("@uP", MySqlDbType.VarChar).Value = passUser;
+
+            adapter.SelectCommand = command;
+            adapter.Fill(table);
+
+            if(table.Rows.Count > 0)
+            {
+                this.Hide();
+                MainForm mainForm = new MainForm();
+                mainForm.Show();
+            }
+            else
+            {
+                MessageBox.Show("No");
+            }
+        }
+
+        private void RegisterButton_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            RegisterForm registerForm = new RegisterForm();
+            registerForm.Show();
+
+
+        }
+    }
+}
+
